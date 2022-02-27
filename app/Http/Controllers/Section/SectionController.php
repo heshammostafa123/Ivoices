@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Section;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSectionRequest;
-use App\Models\Sections;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SectionsController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +17,7 @@ class SectionsController extends Controller
      */
     public function index()
     {
-        $sections=Sections::all();
+        $sections=Section::all();
         return view('sections.sections',['sections'=>$sections]);
     }
 
@@ -39,7 +40,7 @@ class SectionsController extends Controller
     public function store(StoreSectionRequest $request)
     {
         try {
-            sections::create([
+            Section::create([
                 'section_name' => $request->section_name,
                 'description' => $request->description,
                 'Created_by' => (Auth::user()->name),
@@ -59,7 +60,7 @@ class SectionsController extends Controller
      * @param  \App\Models\Sections  $sections
      * @return \Illuminate\Http\Response
      */
-    public function show(Sections $sections)
+    public function show(Section $sections)
     {
         
     }
@@ -70,7 +71,7 @@ class SectionsController extends Controller
      * @param  \App\Models\Sections  $sections
      * @return \Illuminate\Http\Response
      */
-    public function edit(Sections $sections)
+    public function edit(Section $sections)
     {
         //
     }
@@ -86,7 +87,7 @@ class SectionsController extends Controller
     {
         try{
             $id = $request->id;
-            $sections = sections::find($id);
+            $sections = Section::find($id);
             $sections->update([
                 'section_name' => $request->section_name,
                 'description' => $request->description,
@@ -109,7 +110,7 @@ class SectionsController extends Controller
     {
         try{
             $id = $request->id;
-            sections::find($id)->delete();
+            Section::find($id)->delete();
             session()->flash('delete','تم حذف القسم بنجاح');
             return redirect('/sections');
         }catch (\Exception $ex) {

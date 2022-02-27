@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceAttachmnetRequest;
-use App\Models\invoice_attachments;
+use App\Models\Invoice_attachments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,7 +41,7 @@ class InvoiceAttachmentsController extends Controller
         $image = $request->file('file_name');
         $file_name = $image->getClientOriginalName();
 
-        $attachments =  new invoice_attachments();
+        $attachments =  new Invoice_attachments();
         $attachments->file_name = $file_name;
         $attachments->invoice_number = $request->invoice_number;
         $attachments->invoice_id = $request->invoice_id;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
@@ -11,15 +11,16 @@ use App\Notifications\AddInvoice;
 use App\Exports\InvoicesExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Events\MyEventClass;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
-use App\Models\invoice_attachments;
-use App\Models\Invoices;
-use App\Models\Invoices_details;
-use App\Models\Sections;
+use App\Models\Invoice;
+use App\Models\Invoice_attachments;
+use App\Models\Invoice_details;
+use App\Models\Section;
 use App\Models\User;
 use PhpParser\Node\Stmt\TryCatch;
 
-class InvoicesController extends Controller
+class InvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,7 +29,7 @@ class InvoicesController extends Controller
      */
     public function index()
     {
-        $invoices = Invoices::all();
+        $invoices = Invoice::all();
         return view('invoices.invoices', compact('invoices'));
     }
 
@@ -39,7 +40,7 @@ class InvoicesController extends Controller
      */
     public function create()
     {
-        $sections = Sections::all();
+        $sections = Section::all();
         return view('invoices.add_invoice', compact('sections'));
     }
 
@@ -52,7 +53,7 @@ class InvoicesController extends Controller
     public function store(InvoiceRequest $request)
     {
         try {
-            invoices::create([
+            Invoice::create([
                 'invoice_number' => $request->invoice_number,
                 'invoice_Date' => $request->invoice_Date,
                 'Due_date' => $request->Due_date,
@@ -69,8 +70,8 @@ class InvoicesController extends Controller
                 'note' => $request->note,
             ]);
 
-            $invoice_id = invoices::latest()->first()->id;
-            Invoices_details::create([
+            $invoice_id = Invoice::latest()->first()->id;
+            Invoice_details::create([
                 'id_Invoice' => $invoice_id,
                 'invoice_number' => $request->invoice_number,
                 'product' => $request->product,
@@ -88,7 +89,7 @@ class InvoicesController extends Controller
                 $file_name = $image->getClientOriginalName();
                 $invoice_number = $request->invoice_number;
 
-                $attachments = new invoice_attachments();
+                $attachments = new Invoice_attachments();
                 $attachments->file_name = $file_name;
                 $attachments->invoice_number = $invoice_number;
                 $attachments->Created_by = Auth::user()->name;
@@ -107,7 +108,7 @@ class InvoicesController extends Controller
             //$user = User::get();
             //send mail to users with specific permissions
             $user=User::permission('الاشعارات')->get();
-            $invoices = invoices::latest()->first();
+            $invoices = Invoice::latest()->first();
             Notification::send($user, new \App\Notifications\Add_invoice_new($invoices));
 
             session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
@@ -126,7 +127,7 @@ class InvoicesController extends Controller
      */
     public function show($id)
     {
-        $invoices = Invoices::where('id', $id)->first();
+        $invoices = Invoice::where('id', $id)->first();
         return view('invoices.status_update', compact('invoices'));
     }
 
@@ -138,8 +139,8 @@ class InvoicesController extends Controller
      */
     public function edit($id)
     {
-        $invoices = Invoices::where('id', $id)->first();
-        $sections = Sections::all();
+        $invoices = Invoice::where('id', $id)->first();
+        $sections = Section::all();
         return view('invoices.edit_invoice', compact('sections', 'invoices'));
     }
 
@@ -153,7 +154,7 @@ class InvoicesController extends Controller
     public function update(InvoiceRequest $request)
     {
         try {
-            $invoices = Invoices::findOrFail($request->invoice_id);
+            $invoices = Invoice::findOrFail($request->invoice_id);
             $invoices->update([
                 'invoice_number' => $request->invoice_number,
                 'invoice_Date' => $request->invoice_Date,
@@ -187,7 +188,7 @@ class InvoicesController extends Controller
     {
         try {
             $id = $request->invoice_id;
-            $invoices = invoices::where('id', $id)->first();
+            $invoices = Invoice::where('id', $id)->first();
             $Details = invoice_attachments::where('invoice_id', $id)->first(); ////to know the directory of attachments
 
             $id_page = $request->id_page;
@@ -223,7 +224,8 @@ class InvoicesController extends Controller
 
     public function Status_Update($id, Request $request)
     {
-        $invoices = invoices::findOrFail($id);
+        
+        $invoices = Invoice::findOrFail($id);
 
         if ($request->Status === 'مدفوعة') {
 
@@ -233,7 +235,7 @@ class InvoicesController extends Controller
                 'Payment_Date' => $request->Payment_Date,
             ]);
 
-            invoices_Details::create([
+            Invoice_details::create([
                 'id_Invoice' => $request->invoice_id,
                 'invoice_number' => $request->invoice_number,
                 'product' => $request->product,
@@ -250,7 +252,7 @@ class InvoicesController extends Controller
                 'Status' => $request->Status,
                 'Payment_Date' => $request->Payment_Date,
             ]);
-            invoices_Details::create([
+            Invoice_details::create([
                 'id_Invoice' => $request->invoice_id,
                 'invoice_number' => $request->invoice_number,
                 'product' => $request->product,
@@ -268,7 +270,7 @@ class InvoicesController extends Controller
 
     public function Print_invoice($id)
     {
-        $invoices = Invoices::where('id', $id)->first();
+        $invoices = Invoice::where('id', $id)->first();
         return view('invoices.Print_invoice', compact('invoices'));
     }
 
@@ -279,19 +281,19 @@ class InvoicesController extends Controller
 
     public function Invoice_Paid()
     {
-        $invoices = Invoices::where('Value_Status', 1)->get();
+        $invoices = Invoice::where('Value_Status', 1)->get();
         return view('invoices.invoices_paid', compact('invoices'));
     }
 
     public function Invoice_unPaid()
     {
-        $invoices = Invoices::where('Value_Status', 2)->get();
+        $invoices = Invoice::where('Value_Status', 2)->get();
         return view('invoices.invoices_unpaid', compact('invoices'));
     }
 
     public function Invoice_Partial()
     {
-        $invoices = Invoices::where('Value_Status', 3)->get();
+        $invoices = Invoice::where('Value_Status', 3)->get();
         return view('invoices.invoices_Partial', compact('invoices'));
     }
 

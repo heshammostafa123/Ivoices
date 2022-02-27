@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\Invoices;
+use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -18,7 +18,7 @@ class Add_invoice_new extends Notification
      *
      * @return void
      */
-    public function __construct(Invoices $invoices)
+    public function __construct(Invoice $invoices)
     {
         $this->invoices=$invoices;
     }

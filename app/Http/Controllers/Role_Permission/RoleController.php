@@ -1,14 +1,15 @@
 <?php
     
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Role_Permission;
 
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use DB;
+
     
 class RoleController extends Controller
 {

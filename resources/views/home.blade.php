@@ -33,9 +33,9 @@
 									<div class="d-flex">
 										<div class="">
 											<h4 class="tx-20 font-weight-bold mb-1 text-white">
-												{{number_format(\App\Models\Invoices::sum('Total'),2)}}
+												{{number_format(\App\Models\Invoice::sum('Total'),2)}}
 											</h4>										
-											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoices::count()}}</p>
+											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoice::count()}}</p>
 										</div>
 										<span class="float-right my-auto mr-auto">
 											<i class="fas fa-arrow-circle-up text-white"></i>
@@ -57,16 +57,16 @@
 									<div class="d-flex">
 										<div class="">
 											<h4 class="tx-20 font-weight-bold mb-1 text-white">
-												{{number_format(\App\Models\Invoices::where('Value_Status',2)->sum('Total'),2)}}
+												{{number_format(\App\Models\Invoice::where('Value_Status',2)->sum('Total'),2)}}
 											</h4>
-											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoices::where('Value_Status',2)->count()}}</p>
+											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoice::where('Value_Status',2)->count()}}</p>
 										</div>
 										<span class="float-right my-auto mr-auto">
 											<i class="fas fa-arrow-circle-down text-white"></i>
 											<span class="text-white op-7">
 												@php
-												$count_all= \App\Models\Invoices::count();
-												$count_invoices2 = \App\Models\Invoices::where('Value_Status', 2)->count();
+												$count_all= \App\Models\Invoice::count();
+												$count_invoices2 = \App\Models\Invoice::where('Value_Status', 2)->count();
 												if($count_invoices2 == 0){
 												   echo $count_invoices2 = "0%";
 												}
@@ -93,16 +93,16 @@
 									<div class="d-flex">
 										<div class="">
 											<h4 class="tx-20 font-weight-bold mb-1 text-white">
-												{{number_format(\App\Models\Invoices::where('Value_Status',1)->sum('Total'),2)}}
+												{{number_format(\App\Models\Invoice::where('Value_Status',1)->sum('Total'),2)}}
 											</h4>
-											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoices::where('Value_Status',1)->sum('Total')}}</p>
+											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoice::where('Value_Status',1)->sum('Total')}}</p>
 										</div>
 										<span class="float-right my-auto mr-auto">
 											<i class="fas fa-arrow-circle-up text-white"></i>
 											<span class="text-white op-7">
 												@php
-												$count_all= \App\Models\Invoices::count();
-												$count_invoices2 = \App\Models\Invoices::where('Value_Status', 1)->count();
+												$count_all= \App\Models\Invoice::count();
+												$count_invoices2 = \App\Models\Invoice::where('Value_Status', 1)->count();
 												if($count_invoices2 == 0){
 												   echo $count_invoices2 = "0%";
 												}
@@ -129,16 +129,16 @@
 									<div class="d-flex">
 										<div class="">
 											<h4 class="tx-20 font-weight-bold mb-1 text-white">
-												{{number_format(\App\Models\Invoices::where('Value_Status',3)->sum('Total'),2)}}
+												{{number_format(\App\Models\Invoice::where('Value_Status',3)->sum('Total'),2)}}
 											</h4>
-											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoices::where('Value_Status',3)->sum('Total')}}</p>
+											<p class="mb-0 tx-12 text-white op-7">{{\App\Models\Invoice::where('Value_Status',3)->sum('Total')}}</p>
 										</div>
 										<span class="float-right my-auto mr-auto">
 											<i class="fas fa-arrow-circle-down text-white"></i>
 											<span class="text-white op-7">
 												@php
-												$count_all= \App\Models\Invoices::count();
-												$count_invoices2 = \App\Models\Invoices::where('Value_Status', 3)->count();
+												$count_all= \App\Models\Invoice::count();
+												$count_invoices2 = \App\Models\Invoice::where('Value_Status', 3)->count();
 												if($count_invoices2 == 0){
 												   echo $count_invoices2 = "0%";
 												}

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Report;
 
-use App\Models\Invoices;
+use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 
-class Invoices_ReportController extends Controller
+class Invoice_ReportController extends Controller
 {
     public function index()
     {
@@ -27,7 +28,7 @@ class Invoices_ReportController extends Controller
             // في حالة عدم تحديد تاريخ
             if ($request->type && $request->start_at == '' && $request->end_at == '') {
 
-                $invoices = invoices::select('*')->where('Status', '=', $request->type)->get();
+                $invoices = Invoice::select('*')->where('Status', '=', $request->type)->get();
                 $type = $request->type;
                 return view('reports.invoices_report', compact('type'))->withDetails($invoices);
             }
@@ -39,7 +40,7 @@ class Invoices_ReportController extends Controller
                 $end_at = date($request->end_at);
                 $type = $request->type;
 
-                $invoices = invoices::whereBetween('invoice_Date', [$start_at, $end_at])->where('Status', '=', $request->type)->get();
+                $invoices = Invoice::whereBetween('invoice_Date', [$start_at, $end_at])->where('Status', '=', $request->type)->get();
                 return view('reports.invoices_report', compact('type', 'start_at', 'end_at'))->withDetails($invoices);
             }
         }
@@ -49,7 +50,7 @@ class Invoices_ReportController extends Controller
         // في البحث برقم الفاتورة
         else {
 
-            $invoices = Invoices::select('*')->where('invoice_number', '=', $request->invoice_number)->get();
+            $invoices = Invoice::select('*')->where('invoice_number', '=', $request->invoice_number)->get();
             return view('reports.invoices_report')->withDetails($invoices);
         }
     }

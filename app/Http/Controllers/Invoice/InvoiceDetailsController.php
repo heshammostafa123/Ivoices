@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
-use App\Models\Invoices;
-use App\Models\invoice_attachments;
-use App\Models\Invoices_details;
+use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use App\Models\Invoice_attachments;
+use App\Models\Invoice_details;
 use Illuminate\Support\Facades\Storage;
 use File;
 use Illuminate\Http\Request;
 
-class InvoicesDetailsController extends Controller
+class InvoiceDetailsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -50,9 +51,9 @@ class InvoicesDetailsController extends Controller
      */
     public function show($id)
     {
-        $invoices = Invoices::where('id',$id)->first();
-        $details  = Invoices_details::where('id_Invoice',$id)->get();
-        $attachments  = invoice_attachments::where('invoice_id',$id)->get();
+        $invoices = Invoice::where('id',$id)->first();
+        $details  = Invoice_details::where('id_Invoice',$id)->get();
+        $attachments  = Invoice_attachments::where('invoice_id',$id)->get();
         return view('invoices.details_invoice',compact('invoices','details','attachments'));
     }
 

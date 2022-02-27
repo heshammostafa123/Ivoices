@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Product;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
-use App\Models\Sections;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -17,7 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $sections = Sections::all();
+        $sections = Section::all();
         $products = Product::all();
         return view('products.products', ['products' => $products, 'sections' => $sections]);
     }
@@ -86,7 +87,7 @@ class ProductController extends Controller
     public function update(StoreProductRequest $request)
     {
         try {
-            $id = sections::where('section_name', $request->section_name)->first()->id;
+            $id = Section::where('section_name', $request->section_name)->first()->id;
 
             $Products = Product::findOrFail($request->pro_id);
 

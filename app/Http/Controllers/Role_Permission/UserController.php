@@ -1,16 +1,17 @@
 <?php
     
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Role_Permission;
     
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
+
 use Illuminate\Support\Arr;
-    
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class UserController extends Controller
 {
     /**
@@ -44,6 +45,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
     
@@ -105,7 +107,7 @@ class UserController extends Controller
         $user->update($input);
         DB::table('model_has_roles')->where('model_id',$id)->delete();
     
-        $user->assignRole($request->input('roles'));
+        $user->assignRole($request->input('roles_name'));
     
         return redirect()->route('users.index')
                         ->with('success','تم تحديث البيانات بنجاح');
@@ -117,9 +119,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        User::find($id)->delete();
+        User::find($request->user_id)->delete();
         return redirect()->route('users.index')
                         ->with('success','User deleted successfully');
     }

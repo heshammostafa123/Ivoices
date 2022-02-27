@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    المستخدم
+@stop
 
 @section('content')
 <div class="row">
