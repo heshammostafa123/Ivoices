@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Invoice;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+
 class InvoiceAchiveController extends Controller
 {
     /**
@@ -14,8 +15,13 @@ class InvoiceAchiveController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::onlyTrashed()->get();
-        return view('Invoices.Archive_Invoices',compact('invoices'));
+        try {
+            $invoices = Invoice::onlyTrashed()->get();
+            return view('Invoices.Archive_Invoices', compact('invoices'));
+        } catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
 
@@ -69,12 +75,17 @@ class InvoiceAchiveController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  public function update(Request $request)
+    public function update(Request $request)
     {
-         $id = $request->invoice_id;
-         $flight = Invoice::withTrashed()->where('id', $id)->restore();
-         session()->flash('restore_invoice');
-         return redirect('/invoices');
+        try {
+            $id = $request->invoice_id;
+            $flight = Invoice::withTrashed()->where('id', $id)->restore();
+            session()->flash('restore_invoice');
+            return redirect('/invoices');
+        } catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     /**
@@ -85,10 +96,14 @@ class InvoiceAchiveController extends Controller
      */
     public function destroy(Request $request)
     {
-         $invoices = Invoice::withTrashed()->where('id',$request->invoice_id)->first();
-         $invoices->forceDelete();
-         session()->flash('delete_invoice');
-         return redirect('/Archive');
-    
+        try {
+            $invoices = Invoice::withTrashed()->where('id', $request->invoice_id)->first();
+            $invoices->forceDelete();
+            session()->flash('delete_invoice');
+            return redirect('/Archive');
+        } catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 }
