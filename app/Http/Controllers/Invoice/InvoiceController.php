@@ -18,6 +18,7 @@ use App\Models\Invoice_attachments;
 use App\Models\Invoice_details;
 use App\Models\Section;
 use App\Models\User;
+use Exception;
 use PhpParser\Node\Stmt\TryCatch;
 
 class InvoiceController extends Controller
@@ -107,7 +108,7 @@ class InvoiceController extends Controller
 
             //$user = User::get();
             //send mail to users with specific permissions
-            $user=User::permission('الاشعارات')->get();
+            $user = User::permission('الاشعارات')->get();
             $invoices = Invoice::latest()->first();
             Notification::send($user, new \App\Notifications\Add_invoice_new($invoices));
 
@@ -127,8 +128,18 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        $invoices = Invoice::where('id', $id)->first();
-        return view('invoices.status_update', compact('invoices'));
+        try {
+            $invoice = Invoice::find($id);
+            if (!$invoice) {
+                session()->flash('error', 'الفاتوره غير موجوده');
+                return redirect('invoices');
+            }
+            $invoices = Invoice::where('id', $id)->first();
+            return view('invoices.status_update', compact('invoices'));
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     /**
@@ -139,9 +150,19 @@ class InvoiceController extends Controller
      */
     public function edit($id)
     {
-        $invoices = Invoice::where('id', $id)->first();
-        $sections = Section::all();
-        return view('invoices.edit_invoice', compact('sections', 'invoices'));
+        try {
+            $invoice = Invoice::find($id);
+            if (!$invoice) {
+                session()->flash('error', 'الفاتوره غير موجوده');
+                return redirect('invoices');
+            }
+            $invoices = Invoice::where('id', $id)->first();
+            $sections = Section::all();
+            return view('invoices.edit_invoice', compact('sections', 'invoices'));
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     /**
@@ -224,91 +245,127 @@ class InvoiceController extends Controller
 
     public function Status_Update($id, Request $request)
     {
-        
-        $invoices = Invoice::findOrFail($id);
+        try {
+            $invoices = Invoice::findOrFail($id);
 
-        if ($request->Status === 'مدفوعة') {
+            if ($request->Status === 'مدفوعة') {
 
-            $invoices->update([
-                'Value_Status' => 1,
-                'Status' => $request->Status,
-                'Payment_Date' => $request->Payment_Date,
-            ]);
+                $invoices->update([
+                    'Value_Status' => 1,
+                    'Status' => $request->Status,
+                    'Payment_Date' => $request->Payment_Date,
+                ]);
 
-            Invoice_details::create([
-                'id_Invoice' => $request->invoice_id,
-                'invoice_number' => $request->invoice_number,
-                'product' => $request->product,
-                'Section' => $request->Section,
-                'Status' => $request->Status,
-                'Value_Status' => 1,
-                'note' => $request->note,
-                'Payment_Date' => $request->Payment_Date,
-                'user' => (Auth::user()->name),
-            ]);
-        } else {
-            $invoices->update([
-                'Value_Status' => 3,
-                'Status' => $request->Status,
-                'Payment_Date' => $request->Payment_Date,
-            ]);
-            Invoice_details::create([
-                'id_Invoice' => $request->invoice_id,
-                'invoice_number' => $request->invoice_number,
-                'product' => $request->product,
-                'Section' => $request->Section,
-                'Status' => $request->Status,
-                'Value_Status' => 3,
-                'note' => $request->note,
-                'Payment_Date' => $request->Payment_Date,
-                'user' => (Auth::user()->name),
-            ]);
+                Invoice_details::create([
+                    'id_Invoice' => $request->invoice_id,
+                    'invoice_number' => $request->invoice_number,
+                    'product' => $request->product,
+                    'Section' => $request->Section,
+                    'Status' => $request->Status,
+                    'Value_Status' => 1,
+                    'note' => $request->note,
+                    'Payment_Date' => $request->Payment_Date,
+                    'user' => (Auth::user()->name),
+                ]);
+            } else {
+                $invoices->update([
+                    'Value_Status' => 3,
+                    'Status' => $request->Status,
+                    'Payment_Date' => $request->Payment_Date,
+                ]);
+                Invoice_details::create([
+                    'id_Invoice' => $request->invoice_id,
+                    'invoice_number' => $request->invoice_number,
+                    'product' => $request->product,
+                    'Section' => $request->Section,
+                    'Status' => $request->Status,
+                    'Value_Status' => 3,
+                    'note' => $request->note,
+                    'Payment_Date' => $request->Payment_Date,
+                    'user' => (Auth::user()->name),
+                ]);
+            }
+            session()->flash('Status_Update');
+            return redirect('/invoices');
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
         }
-        session()->flash('Status_Update');
-        return redirect('/invoices');
     }
 
     public function Print_invoice($id)
     {
-        $invoices = Invoice::where('id', $id)->first();
-        return view('invoices.Print_invoice', compact('invoices'));
+        try {
+            $invoices = Invoice::find($id);
+            if (!$invoices) {
+                session()->flash('error', 'الفاتوره غير موجوده');
+                return redirect('invoices');
+            }
+            $invoices = Invoice::where('id', $id)->first();
+            return view('invoices.Print_invoice', compact('invoices'));
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     public function export()
     {
-        return Excel::download(new InvoicesExport, 'invoices.xlsx');
+        try {
+            return Excel::download(new InvoicesExport, 'invoices.xlsx');
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     public function Invoice_Paid()
     {
-        $invoices = Invoice::where('Value_Status', 1)->get();
-        return view('invoices.invoices_paid', compact('invoices'));
+        try {
+            $invoices = Invoice::where('Value_Status', 1)->get();
+            return view('invoices.invoices_paid', compact('invoices'));
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     public function Invoice_unPaid()
     {
-        $invoices = Invoice::where('Value_Status', 2)->get();
-        return view('invoices.invoices_unpaid', compact('invoices'));
-    }
-
-    public function Invoice_Partial()
-    {
-        $invoices = Invoice::where('Value_Status', 3)->get();
-        return view('invoices.invoices_Partial', compact('invoices'));
-    }
-
-
-    public function MarkAsRead_all(Request $request)
-    {
-
-        $userUnreadNotification = auth()->user()->unreadNotifications;
-
-        if ($userUnreadNotification) {
-            $userUnreadNotification->markAsRead();
+        try {
+            $invoices = Invoice::where('Value_Status', 2)->get();
+            return view('invoices.invoices_unpaid', compact('invoices'));
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
             return back();
         }
     }
 
 
+    public function Invoice_Partial()
+    {
+        try {
+            $invoices = Invoice::where('Value_Status', 3)->get();
+            return view('invoices.invoices_Partial', compact('invoices'));
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
+    }
 
+
+    public function MarkAsRead_all(Request $request)
+    {
+        try {
+            $userUnreadNotification = auth()->user()->unreadNotifications;
+
+            if ($userUnreadNotification) {
+                $userUnreadNotification->markAsRead();
+                return back();
+            }
+        } catch (\Exception $ex) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Invoice_attachments;
 use App\Models\Invoice_details;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use File;
 use Illuminate\Http\Request;
@@ -51,10 +52,21 @@ class InvoiceDetailsController extends Controller
      */
     public function show($id)
     {
-        $invoices = Invoice::where('id',$id)->first();
-        $details  = Invoice_details::where('id_Invoice',$id)->get();
-        $attachments  = Invoice_attachments::where('invoice_id',$id)->get();
-        return view('invoices.details_invoice',compact('invoices','details','attachments'));
+        try {
+            $invoice = Invoice::find($id);
+            if (!$invoice) {
+                session()->flash('error', 'الفاتوره غير موجوده');
+                return back();
+            }
+
+            $invoices = Invoice::where('id', $id)->first();
+            $details  = Invoice_details::where('id_Invoice', $id)->get();
+            $attachments  = Invoice_attachments::where('invoice_id', $id)->get();
+            return view('invoices.details_invoice', compact('invoices', 'details', 'attachments'));
+        } catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
     /**
@@ -74,26 +86,39 @@ class InvoiceDetailsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $invoices = invoice_attachments::findOrFail($request->id_file);
-        $invoices->delete();
-        Storage::disk('public_uploads')->delete($request->invoice_number.'/'.$request->file_name);
-        session()->flash('delete', 'تم حذف المرفق بنجاح');
-        return back();
+        try {
+            $invoices = invoice_attachments::findOrFail($request->id_file);
+            $invoices->delete();
+            Storage::disk('public_uploads')->delete($request->invoice_number . '/' . $request->file_name);
+            session()->flash('delete', 'تم حذف المرفق بنجاح');
+            return back();
+        } catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
-     public function get_file($invoice_number,$file_name)
-
+    public function get_file($invoice_number, $file_name)
     {
-        $contents= Storage::disk('public_uploads')->getDriver()->getAdapter()->applyPathPrefix($invoice_number.'/'.$file_name);
-        return response()->download( $contents);
+        try{
+            $contents = Storage::disk('public_uploads')->getDriver()->getAdapter()->applyPathPrefix($invoice_number . '/' . $file_name);
+            return response()->download($contents);
+        }catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
 
 
 
-    public function open_file($invoice_number,$file_name)
+    public function open_file($invoice_number, $file_name)
     {
-        $files = Storage::disk('public_uploads')->getDriver()->getAdapter()->applyPathPrefix($invoice_number.'/'.$file_name);
-        return response()->file($files);
+        try{
+            $files = Storage::disk('public_uploads')->getDriver()->getAdapter()->applyPathPrefix($invoice_number . '/' . $file_name);
+            return response()->file($files);
+        } catch (\Exception $th) {
+            session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
+            return back();
+        }
     }
-
 }

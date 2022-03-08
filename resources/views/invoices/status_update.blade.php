@@ -18,6 +18,14 @@
     <!-- breadcrumb -->
 @endsection
 @section('content')
+    @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ session()->get('error') }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     <!-- row -->
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -99,7 +107,8 @@
 
                             <div class="col">
                                 <label for="inputName" class="control-label">نسبة ضريبة القيمة المضافة</label>
-                                <select name="Rate_VAT" id="Rate_VAT" class="form-control" onchange="myFunction()" readonly>
+                                <select name="Rate_VAT" id="Rate_VAT" class="form-control" onchange="myFunction()"
+                                    readonly>
                                     <!--placeholder-->
                                     <option value=" {{ $invoices->Rate_VAT }}">
                                         {{ $invoices->Rate_VAT }}
@@ -129,7 +138,7 @@
                             <div class="col">
                                 <label for="exampleTextarea">ملاحظات</label>
                                 <textarea class="form-control" id="exampleTextarea" name="note" rows="3" readonly>
-                                {{ $invoices->note }}</textarea>
+                                    {{ $invoices->note }}</textarea>
                             </div>
                         </div><br>
 
@@ -188,6 +197,5 @@
         var date = $('.fc-datepicker').datepicker({
             dateFormat: 'yy-mm-dd'
         }).val();
-
     </script>
 @endsection
