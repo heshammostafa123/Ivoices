@@ -141,7 +141,7 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">اسم المنتج</label>
-                                    <input type="text" class="form-control" id="Product_name" name="Product_name"
+                                    <input type="text" class="form-control" id="Product_name" name="product_name"
                                         required>
                                 </div>
 
@@ -191,7 +191,7 @@
 
                                 <input type="hidden" class="form-control" name="pro_id" id="pro_id" value="">
 
-                                <input type="text" class="form-control" name="Product_name" id="Product_name">
+                                <input type="text" class="form-control" name="product_name" id="Product_name">
                             </div>
 
                             <label class="my-1 mr-2" for="inlineFormCustomSelectPref">القسم</label>

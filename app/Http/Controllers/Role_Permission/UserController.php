@@ -45,7 +45,6 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
     
@@ -64,7 +63,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         return view('users.show',compact('user'));
     }
     
@@ -76,7 +75,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
     

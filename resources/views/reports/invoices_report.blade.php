@@ -58,7 +58,7 @@
 
             <div class="card-header pb-0">
 
-                <form action="/Search_invoices" method="POST" role="search" autocomplete="off">
+                <form action="{{route('search_invoices')}}" method="POST" role="search" autocomplete="off">
                     {{ csrf_field() }}
 
 

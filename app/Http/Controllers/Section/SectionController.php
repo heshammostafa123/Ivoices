@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Section;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreSectionRequest;
+use App\Http\Requests\SectionRequest;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Concerns\ToArray;
 
 class SectionController extends Controller
 {
@@ -22,58 +23,23 @@ class SectionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreSectionRequest $request)
+    public function store(SectionRequest $request)
     {
+        $newsection=$request->merge(['Created_by'=>Auth::user()->name])->ToArray();
         try {
-            Section::create([
-                'section_name' => $request->section_name,
-                'description' => $request->description,
-                'Created_by' => (Auth::user()->name),
-            ]);
+            Section::create($newsection);
             session()->flash('Add', 'تم اضافة القسم بنجاح ');
-            return redirect('/sections');
+            return redirect()->back();
         } catch (\Exception $ex) {
             session()->flash('error','حدث خطا ما يرجي المحاوله فيما بعد');
-            return redirect('/sections');
+            return redirect()->back();
         }
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sections  $sections
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Section $sections)
-    {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sections  $sections
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Section $sections)
-    {
-        //
     }
 
     /**
@@ -83,20 +49,17 @@ class SectionController extends Controller
      * @param  \App\Models\Sections  $sections
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreSectionRequest $request)
+    public function update(SectionRequest $request)
     {
         try{
-            $id = $request->id;
+            $id =$request->id;
             $sections = Section::find($id);
-            $sections->update([
-                'section_name' => $request->section_name,
-                'description' => $request->description,
-            ]);
+            $sections->update($request->all());
             session()->flash('edit','تم تعديل القسم بنجاج');
-            return redirect('/sections');
+            return redirect()->back();
         }catch (\Exception $ex) {
             session()->flash('error','حدث خطا ما يرجي المحاوله فيما بعد');
-            return redirect('/sections');
+            return redirect()->back();
         }
     }
 
@@ -112,10 +75,10 @@ class SectionController extends Controller
             $id = $request->id;
             Section::find($id)->delete();
             session()->flash('delete','تم حذف القسم بنجاح');
-            return redirect('/sections');
+            return redirect()->back();
         }catch (\Exception $ex) {
             session()->flash('error','حدث خطا ما يرجي المحاوله فيما بعد');
-            return redirect('/sections');
+            return redirect()->back();
         }
     }
 }

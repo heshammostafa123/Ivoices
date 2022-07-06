@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,15 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'Product_name' =>  'required_without:pro_id|max:255|unique:products,product_name,'.$this->pro_id,
+            'product_name' =>  'required_without:pro_id|max:255|unique:products,product_name,'.$this->pro_id,
         ];
     }
     public function messages()
     {
         return[
 
-            'Product_name.required_without' =>'يرجي ادخال اسم المنتج',
-            'Product_name.unique' =>'اسم المنتج مسجل مسبقا',
+            'product_name.required_without' =>'يرجي ادخال اسم المنتج',
+            'product_name.unique' =>'اسم المنتج مسجل مسبقا',
         ];
     }
 }

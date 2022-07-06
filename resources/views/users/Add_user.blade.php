@@ -83,7 +83,7 @@
                     <div class="row row-sm mg-b-20">
                         <div class="col-lg-6">
                             <label class="form-label">حالة المستخدم</label>
-                            <select name="Status" id="select-beast" class="form-control  nice-select  custom-select">
+                            <select name="status" id="select-beast" class="form-control  nice-select  custom-select">
                                 <option value="مفعل">مفعل</option>
                                 <option value="غير مفعل">غير مفعل</option>
                             </select>

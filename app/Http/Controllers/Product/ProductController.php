@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -20,17 +20,7 @@ class ProductController extends Controller
     {
         $sections = Section::all();
         $products = Product::all();
-        return view('products.products', ['products' => $products, 'sections' => $sections]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('products.products', compact('products','sections'));
     }
 
     /**
@@ -39,42 +29,16 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(ProductRequest $request)
     {
         try {
-            Product::create([
-                'product_name' => $request->Product_name,
-                'section_id' => $request->section_id,
-                'description' => $request->description,
-            ]);
+            Product::create(request()->all());
             session()->flash('Add', 'تم اضافة المنتج بنجاح ');
-            return back();
+            return redirect()->route('products.index');
         } catch (\Exception $th) {
             session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
-            return back();
+            return redirect()->route('products.index');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        //
     }
 
     /**
@@ -84,24 +48,18 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreProductRequest $request)
+    public function update(ProductRequest $request)
     {
         try {
             $id = Section::where('section_name', $request->section_name)->first()->id;
-
             $Products = Product::findOrFail($request->pro_id);
-
-            $Products->update([
-                'product_name' => $request->Product_name,
-                'description' => $request->description,
-                'section_id' => $id,
-            ]);
-
+            $product=$request->merge(['section_id'=>$id])->toArray();
+            $Products->update($product);
             session()->flash('Edit', 'تم تعديل المنتج بنجاح');
-            return back();
+            return redirect()->route('products.index');
         } catch (\Exception $th) {
             session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
-            return back();
+            return redirect()->route('products.index');
         }
     }
 
@@ -117,10 +75,10 @@ class ProductController extends Controller
             $Products = Product::findOrFail($request->pro_id);
             $Products->delete();
             session()->flash('delete', 'تم حذف المنتج بنجاح');
-            return back();
+            return redirect()->route('products.index');
         }catch (\Exception $th) {
             session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
-            return back();
+            return redirect()->route('products.index');
         }
     }
 }

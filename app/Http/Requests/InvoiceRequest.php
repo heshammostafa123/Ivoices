@@ -26,15 +26,15 @@ class InvoiceRequest extends FormRequest
         return [
             // not required if form has filed name invoice_id
             'invoice_number' =>  'required_without:invoice_id|unique:invoices,id,'.$this->invoice_id,
-            'invoice_Date'=>    'required',
-            'Due_date'=>    'required',
+            'invoice_date'=>    'required',
+            'invoice_due_date'=>    'required',
             'product'=>    'required',
-            'Section'=>    'required',
-            'Amount_collection'=>    'required',
-            'Amount_Commission'=>    'required',
-            'Value_VAT'=>    'required',
-            'Rate_VAT'=>    'required',
-            'Total'=>    'required',
+            'section_id'=>    'required',
+            'amount_collection'=>    'required',
+            'amount_commission'=>    'required',
+            'value_vat'=>    'required',
+            'rate_vat'=>    'required',
+            'total'=>    'required',
             'pic'=> 'mimes:jpg,jpeg,png,pdf',
         ];
     }

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    الفواتير الغير مدفوعة
+    الفواتير المدفوعة
 @stop
 @section('css')
     <!-- Internal Data table css -->
@@ -19,7 +19,7 @@
         <div class="my-auto">
             <div class="d-flex">
                 <h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الفواتير
-                    الغير مدفوعة
+                    المدفوعة
                 </span>
             </div>
         </div>
@@ -86,33 +86,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                $i = 0;
-                                @endphp
                                 @foreach ($invoices as $invoice)
-                                    @php
-                                    $i++
-                                    @endphp
                                     <tr>
-                                        <td>{{ $i }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $invoice->invoice_number }} </td>
-                                        <td>{{ $invoice->invoice_Date }}</td>
-                                        <td>{{ $invoice->Due_date }}</td>
+                                        <td>{{ $invoice->invoice_date }}</td>
+                                        <td>{{ $invoice->invoice_due_date }}</td>
                                         <td>{{ $invoice->product }}</td>
                                         <td><a
-                                                href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->section_name }}</a>
+                                                href="{{ route('invoice_details',$invoice->id) }}">{{ $invoice->section->section_name }}</a>
                                         </td>
-                                        <td>{{ $invoice->Discount }}</td>
-                                        <td>{{ $invoice->Rate_VAT }}</td>
-                                        <td>{{ $invoice->Value_VAT }}</td>
-                                        <td>{{ $invoice->Total }}</td>
+                                        <td>{{ $invoice->discount }}</td>
+                                        <td>{{ $invoice->rate_vat }}</td>
+                                        <td>{{ $invoice->value_vat }}</td>
+                                        <td>{{ $invoice->total }}</td>
                                         <td>
-                                            @if ($invoice->Value_Status == 1)
-                                                <span class="text-success">{{ $invoice->Status }}</span>
-                                            @elseif($invoice->Value_Status == 2)
-                                                <span class="text-danger">{{ $invoice->Status }}</span>
+                                            @if ($invoice->value_status == 1)
+                                                <span class="text-success">{{ $invoice->status }}</span>
+                                            @elseif($invoice->value_status == 2)
+                                                <span class="text-danger">{{ $invoice->status }}</span>
                                             @else
-                                                <span class="text-warning">{{ $invoice->Status }}</span>
+                                                <span class="text-warning">{{ $invoice->status }}</span>
                                             @endif
 
                                         </td>
@@ -125,7 +119,7 @@
                                                     type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
                                                 <div class="dropdown-menu tx-13">
                                                     <a class="dropdown-item"
-                                                        href=" {{ url('edit_invoice') }}/{{ $invoice->id }}">تعديل
+                                                        href=" {{route('invoices.edit',[$invoice->id]) }}">تعديل
                                                         الفاتورة</a>
 
                                                     <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
@@ -136,7 +130,7 @@
                                                     <a class="dropdown-item"
                                                         href="{{route('invoices.show',[$invoice->id])}}"><i
                                                             class=" text-success fas
-                                                                                                                                fa-money-bill"></i>&nbsp;&nbsp;تغير
+                                                                                                                                    fa-money-bill"></i>&nbsp;&nbsp;تغير
                                                         حالة
                                                         الدفع</a>
 
