@@ -29,6 +29,14 @@
 @endsection
 @section('content')
 
+    @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ session()->get('error') }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     @if (session()->has('edit'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>{{ session()->get('edit') }}</strong>
@@ -187,7 +195,7 @@
                             <div class="col">
                                 <label for="exampleTextarea">ملاحظات</label>
                                 <textarea class="form-control" id="exampleTextarea" name="note" rows="3">
-                                    {{ $invoices->note }}</textarea>
+                                            {{ $invoices->note }}</textarea>
                                 @error('note')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror

@@ -78,6 +78,10 @@ Route::group(['middleware' => 'auth:web'],function(){
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
+
+
+
+
 });
 
 
