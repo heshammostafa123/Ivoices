@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 
-class InvoiceReportController extends Controller
+class Invoice_ReportController extends Controller
 {
     public function index()
     {
@@ -14,7 +14,7 @@ class InvoiceReportController extends Controller
         return view('reports.invoices_report');
     }
 
-    public function search_invoices(Request $request)
+    public function Search_invoices(Request $request)
     {
 
         $rdio = $request->rdio;

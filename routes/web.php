@@ -5,8 +5,8 @@ use App\Http\Controllers\Invoice\InvoiceAttachmentsController;
 use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Invoice\InvoiceDetailsController;
 use App\Http\Controllers\Product\ProductController;
-use App\Http\Controllers\Report\CustomerReportController;
-use App\Http\Controllers\Report\InvoiceReportController;
+use App\Http\Controllers\Report\Customer_ReportController;
+use App\Http\Controllers\Report\Invoice_ReportController;
 use App\Http\Controllers\Role_Permission\RoleController;
 use App\Http\Controllers\Role_Permission\UserController;
 use App\Http\Controllers\Section\SectionController;
@@ -40,38 +40,37 @@ Route::group(['middleware' => 'auth:web'],function(){
     Route::resource('products',ProductController::class);
 
     Route::resource('invoices',InvoiceController::class);
-    
     //to get section products for add new invoice
     Route::get('/section/{id}',[InvoiceController::class,'getproducts']);
     //to update status of paid
-    Route::post('/status-update/{id}', [InvoiceController::class,'statusUpdate'])->name('status_update');
-    Route::get('/print-invoice/{id}',[InvoiceController::class,'printInvoice'])->name('print_invoice');
-    Route::get('/export-invoice',[InvoiceController::class,'export'])->name('export_invoice');
-    Route::get('/paid-invoices',[InvoiceController::class,'paidIvoices'])->name('paid_invoices');
-    Route::get('/unpaid-invoices',[InvoiceController::class,'unpaidInvoices'])->name('unpaid_invoices');
-    Route::get('/partial-invoices',[InvoiceController::class,'partialInvoices'])->name('partial_invoices');
-    Route::get('/MarkAsRead_all',[InvoiceController::class,'MarkAsRead_all'])->name('MarkAsRead_all');
+    Route::post('/Status_Update/{id}', [InvoiceController::class,'Status_Update'])->name('Status_Update');
+    Route::get('Print_invoice/{id}',[InvoiceController::class,'Print_invoice']);
+    Route::get('export_invoices',[InvoiceController::class,'export']);
+    Route::get('Invoice_Paid',[InvoiceController::class,'Invoice_Paid']);
+    Route::get('Invoice_UnPaid',[InvoiceController::class,'Invoice_unPaid']);
+    Route::get('Invoice_Partial',[InvoiceController::class,'Invoice_Partial']);
+    Route::get('MarkAsRead_all',[InvoiceController::class,'MarkAsRead_all'])->name('MarkAsRead_all');
     
 
 
-    Route::resource('archives',InvoiceAchiveController::class);
+    Route::resource('Archive',InvoiceAchiveController::class);
     
     
-    Route::get('/invoice-details/{id}',[InvoiceDetailsController::class,'show'])->name('invoice_details');
-    Route::Post('/delete-file',[InvoiceDetailsController::class,'destroy'])->name('delete_file');
-    Route::get('/download/{invoice_number}/{file_name}',[InvoiceDetailsController::class,'getFile'])->name('download_file');
-    Route::get('/view-file/{invoice_number}/{file_name}',[InvoiceDetailsController::class,'openFile'])->name('view_file');
+    Route::get('/InvoicesDetails/{id}',[InvoiceDetailsController::class,'show']);
+    Route::get('/download/{invoice_number}/{file_name}',[InvoiceDetailsController::class,'get_file']);
+    Route::get('/View_file/{invoice_number}/{file_name}',[InvoiceDetailsController::class,'open_file']);
+    Route::Post('/delete_file',[InvoiceDetailsController::class,'destroy'])->name('delete_file');
     
-    Route::resource('invoice-attachments',InvoiceAttachmentsController::class);
+    Route::resource('InvoiceAttachments',InvoiceAttachmentsController::class);
     
     
 
     
-    Route::get('invoices-report',[InvoiceReportController::class,'index'])->name('invoices_report');
-    Route::post('search-invoices',[InvoiceReportController::class,'search_invoices'])->name('search_invoices');
+    Route::get('invoices_report',[Invoice_ReportController::class,'index']);
+    Route::post('Search_invoices',[Invoice_ReportController::class,'Search_invoices']);
 
-    Route::get('customers-report',[CustomerReportController::class,'index'])->name('customers_report');
-    Route::post('search-customers',[CustomerReportController::class,'search_customers'])->name('search_customers');
+    Route::get('customers_report',[Customer_ReportController::class,'index']);
+    Route::post('Search_customers',[Customer_ReportController::class,'Search_customers']);
 
 
         

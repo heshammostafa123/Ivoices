@@ -83,27 +83,33 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                $i = 0;
+                                @endphp
                                 @foreach ($invoices as $invoice)
+                                    @php
+                                    $i++
+                                    @endphp
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $i }}</td>
                                         <td>{{ $invoice->invoice_number }} </td>
-                                        <td>{{ $invoice->invoice_date }}</td>
-                                        <td>{{ $invoice->invoice_due_date }}</td>
+                                        <td>{{ $invoice->invoice_Date }}</td>
+                                        <td>{{ $invoice->Due_date }}</td>
                                         <td>{{ $invoice->product }}</td>
                                         <td><a
-                                            href="{{ route('invoice_details',$invoice->id) }}">{{ $invoice->section->section_name }}</a>
+                                                href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->section_name }}</a>
                                         </td>
-                                        <td>{{ $invoice->discount }}</td>
-                                        <td>{{ $invoice->rate_vat }}</td>
-                                        <td>{{ $invoice->value_vat }}</td>
-                                        <td>{{ $invoice->total }}</td>
+                                        <td>{{ $invoice->Discount }}</td>
+                                        <td>{{ $invoice->Rate_VAT }}</td>
+                                        <td>{{ $invoice->Value_VAT }}</td>
+                                        <td>{{ $invoice->Total }}</td>
                                         <td>
-                                            @if ($invoice->value_status == 1)
-                                                <span class="text-success">{{ $invoice->status }}</span>
-                                            @elseif($invoice->value_status == 2)
-                                                <span class="text-danger">{{ $invoice->status }}</span>
+                                            @if ($invoice->Value_Status == 1)
+                                                <span class="text-success">{{ $invoice->Status }}</span>
+                                            @elseif($invoice->Value_Status == 2)
+                                                <span class="text-danger">{{ $invoice->Status }}</span>
                                             @else
-                                                <span class="text-warning">{{ $invoice->status }}</span>
+                                                <span class="text-warning">{{ $invoice->Status }}</span>
                                             @endif
 
                                         </td>
@@ -149,7 +155,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <form action="{{ route('archives.destroy', 'test') }}" method="post">
+                    <form action="{{ route('Archive.destroy', 'test') }}" method="post">
                         {{ method_field('delete') }}
                         {{ csrf_field() }}
                 </div>
@@ -177,7 +183,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <form action="{{ route('archives.update', 'test') }}" method="post">
+                    <form action="{{ route('Archive.update', 'test') }}" method="post">
                         {{ method_field('patch') }}
                         {{ csrf_field() }}
                 </div>

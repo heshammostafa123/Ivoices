@@ -127,10 +127,7 @@
 						<div class="modal-dialog" role="document">
 							<div class="modal-content modal-content-demo">
 								<div class="modal-header">
-									<h6 class="modal-title">اضافة قسم</h6>
-									<button aria-label="Close" class="close" data-dismiss="modal" type="button">
-										<span aria-hidden="true">&times;</span>
-									</button>
+									<h6 class="modal-title">اضافة قسم</h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
 								</div>
 								<div class="modal-body">
 									<form action="{{ route('sections.store') }}" method="post">
@@ -170,7 +167,7 @@
 						 </div>
 						 <div class="modal-body">
 		 
-							 <form action="{{route('sections.update','test')}}" method="post" autocomplete="off">
+							 <form action="sections/update" method="post" autocomplete="off">
 								 {{ method_field('patch') }}
 								 {{ csrf_field() }}
 								 <div class="form-group">
@@ -201,7 +198,7 @@
 								<h6 class="modal-title">حذف القسم</h6><button aria-label="Close" class="close" data-dismiss="modal"
 									type="button"><span aria-hidden="true">&times;</span></button>
 							</div>
-							<form action="{{route('sections.destroy','test')}}" method="post">
+							<form action="sections/destroy" method="post">
 								{{ method_field('delete') }}
 								{{ csrf_field() }}
 								<div class="modal-body">
@@ -217,6 +214,8 @@
 						</form>
 					</div>
 				</div>
+
+
 				<!-- row closed -->
 			</div>
 			<!-- Container closed -->

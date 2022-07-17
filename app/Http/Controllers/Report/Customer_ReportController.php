@@ -7,7 +7,7 @@ use App\Models\Invoice;
 use App\Models\Section;
 use Illuminate\Http\Request;
 
-class CustomerReportController extends Controller
+class Customer_ReportController extends Controller
 {
   public function index()
   {
@@ -17,8 +17,10 @@ class CustomerReportController extends Controller
   }
 
 
-  public function search_customers(Request $request)
+  public function Search_customers(Request $request)
   {
+
+
     // في حالة البحث بدون التاريخ
 
     if ($request->Section && $request->product && $request->start_at == '' && $request->end_at == '') {

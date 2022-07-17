@@ -17,6 +17,7 @@ class InvoiceAchiveController extends Controller
     {
 <<<<<<< HEAD
         $invoices = Invoice::onlyTrashed()->get();
+<<<<<<< HEAD
         return view('Invoices.archive_invoices',compact('invoices'));
 =======
         try {
@@ -26,6 +27,9 @@ class InvoiceAchiveController extends Controller
             session()->flash('error', 'حدث خطا ما يرجي المحاوله فيما بعد');
             return back();
         }
+=======
+        return view('Invoices.Archive_Invoices',compact('invoices'));
+>>>>>>> parent of a03dbdd... api commit
     }
 
 
@@ -70,7 +74,10 @@ class InvoiceAchiveController extends Controller
     public function edit($id)
     {
         //
+<<<<<<< HEAD
 >>>>>>> 37467d0d69a2735db87bc4621599a34d9cf041cb
+=======
+>>>>>>> parent of a03dbdd... api commit
     }
 
     /**
@@ -80,7 +87,7 @@ class InvoiceAchiveController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+  public function update(Request $request)
     {
         try {
             $id = $request->invoice_id;
@@ -105,7 +112,7 @@ class InvoiceAchiveController extends Controller
          $invoices = Invoice::withTrashed()->where('id',$request->invoice_id)->first();
          $invoices->forceDelete();
          session()->flash('delete_invoice');
-         return redirect('/archives');
+         return redirect('/Archive');
     
 =======
         try {

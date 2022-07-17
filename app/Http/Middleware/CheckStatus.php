@@ -16,7 +16,7 @@ class CheckStatus
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->status == 'مفعل') {
+        if (auth()->user()->Status == 'مفعل') {
             return $next($request);
         }
         return redirect()->back();
